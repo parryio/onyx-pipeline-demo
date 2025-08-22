@@ -1,0 +1,53 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "onyx-pipeline"
+version = "0.1.0"
+description = "Deterministic document ingestion & indexing pipeline (safe mode)"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "Apache-2.0"}
+authors = [ {name = "Onyx"} ]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Operating System :: OS Independent",
+]
+dependencies = [
+  "pymupdf>=1.24.0",
+  "tqdm>=4.0",
+  "numpy>=1.24",
+]
+
+[project.optional-dependencies]
+ocr = ["pytesseract"]
+
+[project.scripts]
+onyx-pipeline = "onyx_pipeline.cli.main:main"
+onyx-manifest = "onyx_pipeline.cli.main:main"
+onyx-validate = "onyx_pipeline.cli.main:main"
+onyx-inspect = "onyx_pipeline.cli.main:main"
+
+[tool.mypy]
+python_version = "3.10"
+strict = true
+warn_unreachable = true
+disable_error_code = ["unused-ignore", "no-untyped-def", "type-arg"]
+[[tool.mypy.overrides]]
+module = ["pytesseract", "PIL.*", "fitz"]
+ignore_missing_imports = true
+
+[tool.ruff]
+line-length = 160
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "A", "C4", "SIM"]  # removed TID (absolute import preference) for stable relative imports
+ignore = ["SIM105", "SIM108", "UP038"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "auto"
+
