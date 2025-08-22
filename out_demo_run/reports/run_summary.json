@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "schema_versions": {
+    "manifest": "v1",
+    "chunk": "v2",
+    "meta": "v3"
+  },
+  "counts": {
+    "docs": 2,
+    "chunks": 2,
+    "metas": 2
+  },
+  "timings": {
+    "manifest": 0.0013301372528076172,
+    "docs": 0.001420736312866211,
+    "metas": 0.0004978179931640625,
+    "bm25": 0.0008137226104736328,
+    "embeddings": 0.0013823509216308594,
+    "validate": 0.001499176025390625
+  },
+  "warnings": [],
+  "started_at": 1755888674.0772343,
+  "finished_at": 1755888674.0843892,
+  "duration_s": 0.007154941558837891
+}

@@ -1,5 +1,7 @@
 # onyx-pipeline
 
+[![ci](https://github.com/parryio/onyx-pipeline-demo/actions/workflows/ci.yml/badge.svg)](https://github.com/parryio/onyx-pipeline-demo/actions/workflows/ci.yml)
+
 Deterministic, manifest‑first document ingestion & indexing pipeline (“safe mode”) focused on reproducibility, atomic writes, and observable runs.
 
 ## Features
@@ -12,6 +14,25 @@ Deterministic, manifest‑first document ingestion & indexing pipeline (“safe 
 * Idempotent reruns (already‑produced immutable artifacts reused, no duplication).
 * Strict validation (counts, orphan detection) and atomic write helpers.
 * Inspect CLI for quick introspection of a single document’s manifest row, meta, and first chunk(s).
+
+## Overview Diagram
+```mermaid
+flowchart LR
+  A[Library files] --> B[Manifest build\nmanifest.jsonl (stable IDs)]
+  B --> C[Harvest & Text]
+  C -->|no text| D[OCR gate -> pytesseract]
+  C -->|has text| E[Text pass]
+  D --> F[Chunks @v2]
+  E --> F
+  F --> G[Metas @v3]
+  F --> H[BM25]
+  F --> I[Deterministic embeddings]
+  subgraph Reports
+    J[events.jsonl]:::rep --> K[run_summary.json]:::rep
+  end
+  F --> J
+  classDef rep fill:#eef,stroke:#99f
+```
 
 ## Quick Start (PowerShell)
 ```powershell
@@ -31,6 +52,48 @@ onyx-validate --out .\out
 # 4. Inspect a specific document (doc_id inferred from hash)
 onyx-inspect --out .\out --doc-id <DOC_ID>
 ```
+
+## Dual Demo (Fast vs. Long OCR Book)
+You can run a quick, seconds-long demo on the tiny sample fixtures, or a longer OCR-intensive demo using a scanned book PDF you supply. Each run writes to its own timestamped directory under `runs/` so the project root stays clean.
+
+### 1. Place Long Demo PDF
+Add your scanned book PDF to: `tests/fixtures_long/scanned_book.pdf` (create the folder if needed). Keep it out of git if it's large.
+
+### 2. Run Short Demo
+```bash
+bash scripts/demo-short.sh
+```
+Produces: `runs/<UTC_ISO_TIMESTAMP>-short/` (locally) or `runs/short/` in CI with manifest, chunks, metas, embeddings, bm25, reports.
+
+### 3. Run Long (OCR) Demo
+```bash
+bash scripts/demo-long.sh
+```
+Produces: `runs/<UTC_ISO_TIMESTAMP>-long/` (locally) or `runs/long/` in CI – suitable for narrating stages; you can `tail -f runs/<...>/reports/events.jsonl` for live events.
+
+### 4. Inspect a Doc (optional)
+After a demo you can inspect the first doc:
+```bash
+DOC_ID=$(basename -s .jsonl $(ls runs/*-short/chunks@v2/*.jsonl | head -n1))
+onyx-inspect --out $(ls -d runs/*-short | tail -n1) --doc-id "$DOC_ID"
+```
+
+### 5. Prune Old Runs
+```bash
+bash scripts/prune-runs.sh   # removes runs older than 7 days
+```
+
+## Release Playbook (example for v0.1.0)
+```bash
+zip -r runs-short.zip runs/short 2>/dev/null || true  # optional attachment
+git tag v0.1.0
+git push origin v0.1.0
+# Draft GitHub release -> paste summary below
+```
+Release notes template:
+> First public cut. Manifest-first deterministic pipeline with atomic writes, OCR fallback, quarantine, and validation. Dual demos (short/long), CI on push, scheduled long demo. Outputs: manifest.jsonl, chunks@v2, metas@v3, reports/*, BM25 + deterministic embeddings for tests.
+
+
 
 ## Produced Artifacts
 ```

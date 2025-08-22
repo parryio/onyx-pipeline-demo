@@ -1,0 +1,8 @@
+{"time": 1755888674.0783143, "stage": "manifest", "type": "built", "payload": {"rows": 2}}
+{"time": 1755888674.0791636, "stage": "chunk", "type": "written", "payload": {"doc_id": "76fa9a758477bc13189c140ce0073f5f9269c54061c96e0e6ec3f6f64f8d000b", "chunks": 1}}
+{"time": 1755888674.0797687, "stage": "chunk", "type": "written", "payload": {"doc_id": "f3b3695429c51304d13b2b348a047cefd6dc5d8898901038a1e15e0930c8f77f", "chunks": 1}}
+{"time": 1755888674.080311, "stage": "metas", "type": "index_written", "payload": {"docs": 2}}
+{"time": 1755888674.0809863, "stage": "bm25", "type": "written", "payload": {"chunks": 2}}
+{"time": 1755888674.082474, "stage": "embeddings", "type": "written", "payload": {"chunks": 2}}
+{"time": 1755888674.0839899, "stage": "validate", "type": "complete", "payload": {"errors": 0}}
+{"time": 1755888674.0841901, "stage": "pipeline", "type": "complete", "payload": {"docs": 2, "chunks": 2}}

@@ -1,0 +1,23 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Demo: Short",
+      "type": "shell",
+      "command": "bash scripts/demo-short.sh",
+      "problemMatcher": []
+    },
+    {
+      "label": "Demo: Long (Book OCR)",
+      "type": "shell",
+      "command": "bash scripts/demo-long.sh",
+      "problemMatcher": []
+    },
+    {
+      "label": "Prune Runs (older than 7d)",
+      "type": "shell",
+      "command": "bash scripts/prune-runs.sh",
+      "problemMatcher": []
+    }
+  ]
+}

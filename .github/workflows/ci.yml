@@ -1,0 +1,35 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  quickstart:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install OCR deps
+        run: sudo apt-get update && sudo apt-get install -y tesseract-ocr tesseract-ocr-eng
+      - name: Install package
+        run: |
+          python -m pip install -U pip
+          pip install -e ".[ocr]"
+      - name: Demo (short)
+        run: bash scripts/demo-short.sh --fixed
+        env:
+          CI: "true"
+      - name: Validate
+        run: onyx-validate --out ./runs/short
+      - uses: actions/upload-artifact@v4
+        with:
+          name: runs-short
+          path: runs/short
+
