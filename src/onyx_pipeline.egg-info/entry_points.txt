@@ -1,0 +1,5 @@
+[console_scripts]
+onyx-inspect = onyx_pipeline.cli.main:main
+onyx-manifest = onyx_pipeline.cli.main:main
+onyx-pipeline = onyx_pipeline.cli.main:main
+onyx-validate = onyx_pipeline.cli.main:main

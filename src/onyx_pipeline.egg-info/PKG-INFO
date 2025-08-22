@@ -1,0 +1,64 @@
+Metadata-Version: 2.4
+Name: onyx-pipeline
+Version: 0.1.0
+Summary: Deterministic document ingestion & indexing pipeline (safe mode)
+Author: Onyx
+License: Apache-2.0
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: pymupdf>=1.24.0
+Requires-Dist: tqdm>=4.0
+Requires-Dist: numpy>=1.24
+Provides-Extra: ocr
+Requires-Dist: pytesseract; extra == "ocr"
+Dynamic: license-file
+
+# onyx-pipeline
+
+Deterministic, manifest-first document ingestion & indexing pipeline (safe mode extraction).
+
+## Features (initial skeleton)
+- Manifest builder (streaming library scan) with frozen schema.
+- PDF harvest (raster placeholder) and text extraction (PyMuPDF) stubs.
+- OCR gate + engine stubs (local only).
+- Chunking with deterministic policies.
+- Metas / BM25 / Embeddings (deterministic pseudo-embeddings 8192-d).
+- Validation & summary reporting.
+
+## Quick Start (PowerShell)
+```powershell
+python -m venv .venv; .\.venv\Scripts\Activate.ps1
+pip install --upgrade pip
+pip install -e .
+
+# Build manifest
+onyx-manifest build --lib .\tests\fixtures --out .\out
+
+# Run full safe pipeline
+onyx-pipeline run --lib .\tests\fixtures --out .\out --ocr-lang eng
+
+# Validate outputs
+onyx-validate --out .\out
+```
+
+## Layout
+```
+src/onyx_pipeline/
+  manifest/  # manifest builder & schema
+  harvest/   # pdf raster + ocr stubs
+  text/      # text extraction & normalization
+  chunking/  # chunk rules & writer
+  metas/     # meta summaries
+  search/    # bm25 + embeddings
+  reporting/ # structured logging + summary
+  storage/   # paths + atomic writes + safety
+  validate/  # validator
+  cli/       # argparse entrypoint
+```
+
+## License
+Apache-2.0
