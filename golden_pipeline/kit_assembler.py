@@ -19,10 +19,11 @@ from __future__ import annotations
 import json, yaml
 from golden_pipeline.util.slugs import canon_domain, canon_action
 from pathlib import Path
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Tuple
 
 KIT_MANIFEST_FILENAME = 'kit_manifest.yaml'
 DOMAIN_PROFILES_DIR = 'lexicons/domain_profiles'
+
 
 def _determine_domain(kit_id: str) -> str:
     if '-' in kit_id:
@@ -30,6 +31,7 @@ def _determine_domain(kit_id: str) -> str:
     else:
         base = kit_id
     return canon_domain(base) or base
+
 
 def _load_domain_profile(domain: str) -> Dict[str, Any]:
     path = Path(DOMAIN_PROFILES_DIR) / f"{domain}.yaml"
@@ -40,7 +42,6 @@ def _load_domain_profile(domain: str) -> Dict[str, Any]:
     except Exception as e:
         raise ValueError(f"Failed loading domain profile {path}: {e}")
 
-from typing import Tuple
 
 def _collapse_steps(ordered_steps: List[Dict[str, Any]]) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
     """Collapse adjacent steps with identical action.
@@ -75,9 +76,11 @@ def _collapse_steps(ordered_steps: List[Dict[str, Any]]) -> Tuple[List[Dict[str,
         collapse_entries.append({'lean_index': len(lean)-1, 'action': current_action, 'source_step_ids': buf_ids})
     return lean, collapse_entries
 
+
 def _load_yaml(path: Path) -> Any:
     with open(path, 'r', encoding='utf-8') as f:
         return yaml.safe_load(f)
+
 
 def _load_jsonl(path: Path) -> List[Dict[str, Any]]:
     out: List[Dict[str, Any]] = []
@@ -91,9 +94,24 @@ def _load_jsonl(path: Path) -> List[Dict[str, Any]]:
                 raise ValueError(f"Invalid JSON in {path} line {ln}: {e}")
     return out
 
+
+def _derive_doc_title(doc_meta_row: Dict[str, Any]) -> str | None:
+    metadata = doc_meta_row.get('metadata') or {}
+    title = metadata.get('title')
+    if title:
+        return title
+    legacy_title = doc_meta_row.get('title')
+    if legacy_title:
+        return legacy_title
+    path = doc_meta_row.get('path')
+    if path:
+        stem = Path(path).stem
+        return stem or path
+    return None
+
+
 def _collect_unique_strings(*sources: Any) -> List[str]:
     """Normalize and merge string iterables while preserving insertion order."""
-
     merged: List[str] = []
     for src in sources:
         if not src:
@@ -107,6 +125,7 @@ def _collect_unique_strings(*sources: Any) -> List[str]:
                 continue
             merged.append(normalized)
     return merged
+
 
 def assemble_kits(config: Dict[str, Any]) -> None:
     artifacts_dir = Path(config.get('artifacts_dir', 'artifacts'))
@@ -123,6 +142,7 @@ def assemble_kits(config: Dict[str, Any]) -> None:
     doc_meta_path = phase3_dir / 'doc_metadata.jsonl'
     if not doc_meta_path.exists():
         raise FileNotFoundError(doc_meta_path)
+
     # Locate manifest (co-located with lexicons for now)
     lex_dir = Path((config.get('paths') or {}).get('lexicons', 'lexicons'))
     kit_manifest_path = lex_dir / KIT_MANIFEST_FILENAME
@@ -132,7 +152,7 @@ def assemble_kits(config: Dict[str, Any]) -> None:
     kit_manifest: List[Dict[str, Any]] = _load_yaml(kit_manifest_path) or []
     ritual_steps = _load_jsonl(ritual_steps_path)
     doc_meta = _load_jsonl(doc_meta_path)
-    doc_title_by_id = {d['doc_id']: d.get('title') for d in doc_meta}
+    doc_title_by_id = {d['doc_id']: _derive_doc_title(d) for d in doc_meta}
 
     # Index ritual steps by source_doc_id
     steps_by_doc: Dict[str, List[Dict[str, Any]]] = {}
@@ -159,14 +179,13 @@ def assemble_kits(config: Dict[str, Any]) -> None:
             domain_profile = _load_domain_profile(domain)
             allowed_actions = set(domain_profile.get('allowed_actions') or [])
             prerequisites = domain_profile.get('prerequisites') or []
+
             # Collect doc ids to exclude due to link_only prerequisites
             exclude_doc_ids: set[str] = set()
             prereq_kit_ids = []
             for pr in prerequisites:
                 if pr.get('action') == 'link_only':
                     pid = pr.get('kit_id')
-                    # Do not self-exclude: a kit listed as a prerequisite should only be excluded
-                    # from OTHER kits' inlining, not from its own assembly.
                     if pid and pid in kit_docs_map and pid != kit_id:
                         exclude_doc_ids.update(kit_docs_map[pid])
                         prereq_kit_ids.append(pid)
@@ -177,12 +196,10 @@ def assemble_kits(config: Dict[str, Any]) -> None:
                 if doc_id in exclude_doc_ids:
                     continue  # Do not inline prerequisites
                 doc_steps = steps_by_doc.get(doc_id, [])
-                # Filter by allowed actions if profile present
                 if allowed_actions:
                     doc_steps = [s for s in doc_steps if (canon_action(s.get('action')) in allowed_actions)]
                 # Deterministic ordering: (chunk_seq, char_start)
                 def _sort_key(s):
-                    # chunk_seq may be None; treat None as large sentinel to keep numbered first
                     seq = s.get('chunk_seq')
                     return (seq if isinstance(seq, int) else 10**9, s.get('char_start', 0))
                 doc_steps.sort(key=_sort_key)
@@ -222,10 +239,8 @@ def assemble_kits(config: Dict[str, Any]) -> None:
                 })
 
             lean_steps, collapse_entries = _collapse_steps(ordered_steps)
-            # Annotate collapse entries with kit id for derivations file
             for ce in collapse_entries:
                 ce['kit_id'] = kit_id
-            for ce in collapse_entries:
                 collapse_f.write(json.dumps(ce, sort_keys=True) + '\n')
 
             kit_raw_obj = {
@@ -263,10 +278,10 @@ def assemble_kits(config: Dict[str, Any]) -> None:
             print(f"[phase4] wrote kit {kit_id} RAW={len(raw_steps_min)} LEAN={len(lean_steps)} -> {raw_path.name}, {lean_path.name}")
     print(f"[phase4] wrote collapse derivations -> {collapse_map_path}")
 
+
 __all__ = ['assemble_kits']
 
 if __name__ == '__main__':
-    # Minimal manual invocation (debugging)
     import yaml, sys
     cfg_path = Path('config/onyx.yml')
     if len(sys.argv) > 1:
@@ -274,4 +289,3 @@ if __name__ == '__main__':
     with open(cfg_path, 'r', encoding='utf-8') as f:
         cfg = yaml.safe_load(f)
     assemble_kits(cfg)
-
