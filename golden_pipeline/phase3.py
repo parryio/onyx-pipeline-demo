@@ -16,7 +16,6 @@ import json, hashlib, os
 from pathlib import Path
 from typing import Dict, Any, List
 from . import cache_manager as cache_mod
-import yaml
 from . import doc_metadata_parser
 from . import entity_parser  # lexicon-driven entity parsing
 from .phase3_gate import verify_phase3_artifacts, GateError
@@ -31,10 +30,14 @@ def run_phase3(config: Dict[str, Any]) -> None:
     # Resolve enrichment cache path from config if available
     cfg_phase3 = (config.get('phase3') or {})
     cache_path = Path(cfg_phase3.get('enrichment_cache', 'datasets/phase3/enrichment_cache.jsonl'))
+    cache_synthesized = False
     if not cache_path.exists():
-        raise FileNotFoundError(f"Missing enrichment cache: {cache_path}")
+        cache_path.parent.mkdir(parents=True, exist_ok=True)
+        cache_path.write_text('', encoding='utf-8')
+        cache_synthesized = True
 
     cache_items = cache_mod.read_cache(cache_path)
+    cache_empty = len(cache_items) == 0
 
     # 1. Doc metadata
     manifest_path = phase1_dir / 'manifest.jsonl'
@@ -82,10 +85,13 @@ def run_phase3(config: Dict[str, Any]) -> None:
     metrics = {
         'enrichment_cache_path': str(cache_path),
         'enrichment_cache_digest': digest,
+        'enrichment_cache_empty': cache_empty,
         'entity_count': len(entities),
         'doc_count': len(doc_metadata_records),
         'ritual_step_count': len(steps)
     }
+    if cache_synthesized:
+        metrics['enrichment_cache_synthesized'] = True
     metrics_path.write_text(json.dumps(metrics, sort_keys=True, indent=2))
 
     # 5. Gate

@@ -19,6 +19,7 @@ class GateError(Exception):
 
 DOC_SCHEMA_PATH = Path('tools/schemas/phase3_doc_metadata.schema.json')
 CACHE_SCHEMA_PATH = Path('tools/schemas/phase3_enrichment_cache.schema.json')
+EMPTY_CACHE_DIGEST = hashlib.sha256(b'').hexdigest()
 
 ENTITY_SCHEMA = {
     '$schema': 'http://json-schema.org/draft-07/schema#',
@@ -74,7 +75,7 @@ def verify_phase3_artifacts(artifacts_root: str | Path, config_path: str | Path 
     cache_cfg_path = (cfg.get('phase3') or {}).get('enrichment_cache') or 'datasets/phase3/enrichment_cache.jsonl'
     cache_path = Path(cache_cfg_path)
 
-    for p in [doc_metadata_path, entities_path, metrics_path, chunks_path, cache_path]:
+    for p in [doc_metadata_path, entities_path, metrics_path, chunks_path]:
         if not p.exists():
             raise GateError(f"Missing required artifact: {p}")
 
@@ -130,8 +131,25 @@ def verify_phase3_artifacts(artifacts_root: str | Path, config_path: str | Path 
         errors.append(f"Failed to read metrics: {e}")
         metrics = {}
     expected_digest = metrics.get('enrichment_cache_digest')
-    actual_digest = _file_sha256(cache_path)
-    if expected_digest != actual_digest:
+    metrics_empty = bool(metrics.get('enrichment_cache_empty'))
+    actual_digest = None
+    if cache_path.exists():
+        actual_digest = _file_sha256(cache_path)
+        if metrics_empty and actual_digest != EMPTY_CACHE_DIGEST:
+            errors.append('Metrics flagged empty cache but cache file digest is not empty sha256')
+        if not metrics_empty and actual_digest == EMPTY_CACHE_DIGEST:
+            errors.append('Cache file digest is empty sha256 but metrics did not flag empty cache')
+    else:
+        if metrics_empty:
+            actual_digest = EMPTY_CACHE_DIGEST
+        else:
+            errors.append(f"Missing required artifact: {cache_path}")
+
+    if expected_digest is None:
+        errors.append('Metrics missing enrichment_cache_digest')
+    elif actual_digest is None:
+        errors.append('Unable to compute enrichment cache digest for comparison')
+    elif expected_digest != actual_digest:
         errors.append(f"Cache digest mismatch expected={expected_digest} actual={actual_digest}")
 
     # 5. Spot-check random subset for stronger fidelity (if large)

@@ -10,7 +10,7 @@ Determinism: explicit sorting and LF newlines; no randomness or clocks.
 """
 from __future__ import annotations
 import argparse, json, os, pathlib, hashlib
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Iterable
 
 
 def sha256_bytes(b: bytes) -> str:
@@ -31,6 +31,20 @@ def write_jsonl(p: pathlib.Path, rows: List[Dict[str, Any]]):
     with p.open("w", encoding="utf-8", newline="\n") as f:
         for r in rows:
             f.write(json.dumps(r, ensure_ascii=False, sort_keys=True) + "\n")
+
+
+def _collect_tags(*sources: Iterable[Any]) -> List[str]:
+    tags = set()
+    for src in sources:
+        if not src:
+            continue
+        iterable = [src] if isinstance(src, str) else src
+        for item in iterable:
+            if isinstance(item, str):
+                normalized = item.strip()
+                if normalized:
+                    tags.add(normalized)
+    return sorted(tags)
 
 
 def main():
@@ -68,7 +82,7 @@ def main():
     for kit in sorted(kits, key=lambda k: k.get("kit_id", "")):
         kit_id = kit["kit_id"]
         title = kit.get("title") or kit.get("name") or kit_id
-        tags = sorted(set(kit.get("tags", [])))
+        tags = _collect_tags(kit.get("tags"), kit.get("keywords"))
         source_docs = sorted(set(kit.get("source_doc_ids", [])))
 
         # preserve original step ordering from kit; synthesize order if missing
@@ -76,16 +90,22 @@ def main():
         ui_steps = []
         for idx, s in enumerate(steps):
             media_refs = s.get("media_refs", [])
+            ritual_step_id = s.get("ritual_step_id")
+            step_id = s.get("step_id") or ritual_step_id or f"{kit_id}_{idx:05d}"
+            step_tags = _collect_tags(s.get("tags"), s.get("keywords"))
+            text_value = s.get("text") or s.get("matched_text") or ""
 
             ui_steps.append({
-                "step_id": s.get("step_id"),
+                "step_id": step_id,
+                "ritual_step_id": ritual_step_id,
                 "order": int(s.get("order", idx)),
-                "text": (s.get("text", "") or "").strip(),
+                "text": text_value.strip(),
                 "materials": s.get("materials", []),
                 "notes": s.get("notes", ""),
                 "overlay": s.get("overlay", {}),  # optional UI hints
                 "duration_s": int(s.get("duration_s", 0)),  # 0 if unknown
                 "media_refs": media_refs,
+                "tags": step_tags,
             })
 
         ui_row = {
