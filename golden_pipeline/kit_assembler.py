@@ -91,6 +91,20 @@ def _load_jsonl(path: Path) -> List[Dict[str, Any]]:
                 raise ValueError(f"Invalid JSON in {path} line {ln}: {e}")
     return out
 
+def _derive_doc_title(doc_meta_row: Dict[str, Any]) -> str | None:
+    metadata = doc_meta_row.get('metadata') or {}
+    title = metadata.get('title')
+    if title:
+        return title
+    legacy_title = doc_meta_row.get('title')
+    if legacy_title:
+        return legacy_title
+    path = doc_meta_row.get('path')
+    if path:
+        stem = Path(path).stem
+        return stem or path
+    return None
+
 def assemble_kits(config: Dict[str, Any]) -> None:
     artifacts_dir = Path(config.get('artifacts_dir', 'artifacts'))
     phase3_dir = artifacts_dir / 'phase3'
@@ -115,7 +129,7 @@ def assemble_kits(config: Dict[str, Any]) -> None:
     kit_manifest: List[Dict[str, Any]] = _load_yaml(kit_manifest_path) or []
     ritual_steps = _load_jsonl(ritual_steps_path)
     doc_meta = _load_jsonl(doc_meta_path)
-    doc_title_by_id = {d['doc_id']: d.get('title') for d in doc_meta}
+    doc_title_by_id = {d['doc_id']: _derive_doc_title(d) for d in doc_meta}
 
     # Index ritual steps by source_doc_id
     steps_by_doc: Dict[str, List[Dict[str, Any]]] = {}
