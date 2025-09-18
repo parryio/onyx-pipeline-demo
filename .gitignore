@@ -108,3 +108,9 @@ tmp/
 *~
 ~$*
 .cache/
+
+# Data & app
+ datasets/
+onyx-hall-phase5-app/
+*.db
+
