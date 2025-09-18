@@ -91,6 +91,23 @@ def _load_jsonl(path: Path) -> List[Dict[str, Any]]:
                 raise ValueError(f"Invalid JSON in {path} line {ln}: {e}")
     return out
 
+def _collect_unique_strings(*sources: Any) -> List[str]:
+    """Normalize and merge string iterables while preserving insertion order."""
+
+    merged: List[str] = []
+    for src in sources:
+        if not src:
+            continue
+        iterable = [src] if isinstance(src, str) else src
+        for item in iterable:
+            if not isinstance(item, str):
+                continue
+            normalized = item.strip()
+            if not normalized or normalized in merged:
+                continue
+            merged.append(normalized)
+    return merged
+
 def assemble_kits(config: Dict[str, Any]) -> None:
     artifacts_dir = Path(config.get('artifacts_dir', 'artifacts'))
     phase3_dir = artifacts_dir / 'phase3'
@@ -180,16 +197,29 @@ def assemble_kits(config: Dict[str, Any]) -> None:
                 continue
 
             # RAW kit with embedded minimal step info (traceability & schema stability)
-            raw_steps_min = [
-                {
-                    'ritual_step_id': s.get('ritual_step_id') or s.get('id'),
+            kit_tags = _collect_unique_strings(kit.get('tags'), keywords)
+
+            raw_steps_min = []
+            for idx, s in enumerate(ordered_steps, 1):
+                ritual_step_id = s.get('ritual_step_id') or s.get('id')
+                step_keywords = _collect_unique_strings(s.get('tags'), s.get('keywords'))
+                if not step_keywords:
+                    step_keywords = list(kit_tags)
+                matched_text = s.get('matched_text')
+                if not isinstance(matched_text, str):
+                    matched_text = ''
+                raw_steps_min.append({
+                    'step_id': f"{kit_id}_{idx:05d}",
+                    'ritual_step_id': ritual_step_id,
                     'action': s.get('action'),
+                    'matched_text': matched_text,
+                    'text': matched_text,
+                    'keywords': step_keywords,
                     'source_doc_id': s.get('source_doc_id'),
                     'source_chunk_id': s.get('source_chunk_id'),
                     'char_start': s.get('char_start'),
                     'char_end': s.get('char_end')
-                } for s in ordered_steps
-            ]
+                })
 
             lean_steps, collapse_entries = _collapse_steps(ordered_steps)
             # Annotate collapse entries with kit id for derivations file
@@ -204,6 +234,7 @@ def assemble_kits(config: Dict[str, Any]) -> None:
                 'domain': domain,
                 'source_doc_ids': source_doc_ids,
                 'keywords': keywords,
+                'tags': kit_tags,
                 'description': description,
                 'step_ids': step_ids,
                 'steps': raw_steps_min,
@@ -243,3 +274,4 @@ if __name__ == '__main__':
     with open(cfg_path, 'r', encoding='utf-8') as f:
         cfg = yaml.safe_load(f)
     assemble_kits(cfg)
+
