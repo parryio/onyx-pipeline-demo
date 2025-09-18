@@ -69,7 +69,13 @@ def main():
     p5_parser.add_argument('--root', required=True, help='Path to library root directory')
 
     args = parser.parse_args()
-    config = load_config(args.config) if hasattr(args, 'config') and args.config else {}
+    config = {}
+    if hasattr(args, 'config') and args.config:
+        loaded_cfg = load_config(args.config) or {}
+        if not isinstance(loaded_cfg, dict):
+            raise ValueError(f"Config file {args.config} must define a mapping at the top level")
+        config = dict(loaded_cfg)
+        config['config_path'] = args.config
     # Command-line precedence overrides
     if getattr(args, 'root', None):
         config['root'] = args.root
