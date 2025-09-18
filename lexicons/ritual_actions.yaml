@@ -1,0 +1,31 @@
+---
+# Deterministic ritual action lexicon (v1)
+# Ordered list; order preserved for pattern application.
+# Patterns are case-insensitive regular expressions.
+patterns:
+  - label: qabalistic-cross
+    regex: "qabalistic\\s+cross"
+  - label: relax
+    regex: "\\brelax(?:ation)?\\b"
+  - label: vibrate
+    regex: "\\bvibrate(?:\\s+the)?\\b"
+  - label: draw-pentagram
+    regex: "draw(?:ing)?\\s+(?:a\\s+)?pentagram"
+  - label: trace-pentagram
+    regex: "trace(?:s|d|ing)?\\s+(?:the\\s+)?pentagram"
+  - label: intone
+    regex: "\\bintone(?:s|d|ing)?\\b"
+  - label: assume-godform
+    regex: "assume(?:s|d|ing)?\\s+the\\s+godform"
+  - label: banish
+    regex: "\\bbanish(?:es|ed|ing)?\\b"
+  - label: invoking-ritual
+    regex: "invoking\\s+ritual"
+  - label: visualize
+    regex: "visuali[zs]e(?:s|d|ing)?"
+  - label: formulate-pillar
+    regex: "formulate(?:s|d|ing)?\\s+(?:the\\s+)?pillar"
+  - label: circulate-light
+    regex: "circulat(?:e|es|ed|ing)\\s+(?:of\\s+the\\s+)?light"
+  - label: ground
+    regex: "\\bground(?:ing)?\\b"

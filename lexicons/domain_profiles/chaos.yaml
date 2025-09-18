@@ -1,0 +1,3 @@
+domain: "chaos"
+allowed_actions: []  # empty => no filtering (pass-through)
+prerequisites: []

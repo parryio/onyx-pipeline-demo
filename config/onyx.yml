@@ -1,0 +1,52 @@
+# Sample configuration for the Onyx Scribe pipeline.
+# Paths can be absolute or relative to the project root.
+
+root: "Library"
+artifacts_dir: "artifacts"
+pattern:
+  - "**/*.txt"
+  - "**/*.pdf"
+  - "**/*.png"
+  - "**/*.jpg"
+  - "**/*.jpeg"
+  - "**/*.mp3"
+  - "**/*.wav"
+ingestion:
+  enabled: true
+  pdf:
+    min_text_chars: 40
+    doc_nonempty_ratio_min: 0.02
+    doc_min_total_chars: 500
+    partial_rescue: false
+  # Deterministic OCR settings for images and PDF rasterization
+  ocr_deterministic_settings:
+    dpi: 300
+    tesseract_lang: "eng+osd"  # osd for orientation and script detection
+    tesseract_oem: 3            # Default based on what's available
+    tesseract_psm: 3            # Fully automatic page segmentation
+phase1:
+  ocr:
+    enabled: true
+  chunking:
+    target_chars: 1200
+    overlap: 120
+    split_on: ["\n\n", "\n", ". ", "; ", ", "]
+auxiliary:
+  phase1_metrics: true
+  # Enable writing artifacts/phase1/qa_report.jsonl for OCR-derived items
+  phase1_qa_report: true
+  # Enable writing artifacts/phase2/metrics_phase2.json
+  phase2_metrics: true
+
+phase2:
+  bm25:
+    k1: 1.2
+    b: 0.75
+  embeddings:
+    model_slug: "localhash-8d-v1"  # Drives artifact name: embeddings.<model_slug>.jsonl
+
+phase3:
+  enrichment_cache: "datasets/phase3/enrichment_cache.jsonl"  # Path consumed by offline Phase 3
+paths:
+  lexicons: "lexicons"  # Directory containing deterministic lexicon YAML files
+

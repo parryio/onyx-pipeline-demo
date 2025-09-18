@@ -1,0 +1,39 @@
+terms:
+- category: buddhism_concept
+  canonical: Dukkha
+  variants: []
+- category: buddhism_concept
+  canonical: Anicca
+  variants: []
+- category: buddhism_concept
+  canonical: Anatta
+  variants: []
+- category: buddhism_concept
+  canonical: Sunyata
+  variants:
+  - Shunyata
+- category: buddhism_practice
+  canonical: Samadhi
+  variants: []
+- category: buddhism_practice
+  canonical: Jhana
+  variants:
+  - Dhyana
+- category: buddhism_virtue
+  canonical: Sila
+  variants:
+  - Sīla
+- category: buddhism_brahmavihara
+  canonical: Metta
+  variants:
+  - Maitri
+- category: buddhism_brahmavihara
+  canonical: Karuna
+  variants: []
+- category: buddhism_brahmavihara
+  canonical: Mudita
+  variants: []
+- category: buddhism_brahmavihara
+  canonical: Upekkha
+  variants:
+  - Upeksha

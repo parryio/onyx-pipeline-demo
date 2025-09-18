@@ -1,0 +1,37 @@
+terms:
+- category: norse_deity
+  canonical: Odin
+  variants:
+  - Woden
+  - Wotan
+- category: norse_deity
+  canonical: Thor
+  variants:
+  - Donar
+- category: norse_deity
+  canonical: Freya
+  variants:
+  - Freyja
+- category: norse_deity
+  canonical: Loki
+  variants: []
+- category: norse_world
+  canonical: Yggdrasil
+  variants: []
+- category: norse_object
+  canonical: Mjolnir
+  variants:
+  - Mjöllnir
+- category: norse_rune
+  canonical: Fehu
+  variants: []
+- category: norse_rune
+  canonical: Ansuz
+  variants: []
+- category: norse_rune
+  canonical: Tiwaz
+  variants: []
+- category: norse_rune
+  canonical: Othala
+  variants:
+  - Odal

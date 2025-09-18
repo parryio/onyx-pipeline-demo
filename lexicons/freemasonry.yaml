@@ -1,0 +1,19 @@
+terms:
+- category: freemasonry_degree
+  canonical: Entered Apprentice
+  variants: []
+- category: freemasonry_degree
+  canonical: Fellow Craft
+  variants: []
+- category: freemasonry_degree
+  canonical: Master Mason
+  variants: []
+- category: freemasonry_title
+  canonical: Worshipful Master
+  variants: []
+- category: freemasonry_rite
+  canonical: Scottish Rite
+  variants: []
+- category: freemasonry_rite
+  canonical: York Rite
+  variants: []

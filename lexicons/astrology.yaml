@@ -1,0 +1,44 @@
+terms:
+- category: astrology_planet
+  canonical: Uranus
+  variants: []
+- category: astrology_planet
+  canonical: Neptune
+  variants: []
+- category: astrology_planet
+  canonical: Pluto
+  variants: []
+- category: astrology_point
+  canonical: Ascendant
+  variants:
+  - ASC
+- category: astrology_point
+  canonical: Midheaven
+  variants:
+  - MC
+- category: astrology_aspect
+  canonical: Conjunction
+  variants:
+  - Conj
+- category: astrology_aspect
+  canonical: Opposition
+  variants: []
+- category: astrology_aspect
+  canonical: Trine
+  variants: []
+- category: astrology_aspect
+  canonical: Square
+  variants: []
+- category: astrology_aspect
+  canonical: Sextile
+  variants: []
+- category: astrology_house
+  canonical: House I
+  variants:
+  - 1st House
+  - First House
+- category: astrology_house
+  canonical: House XII
+  variants:
+  - 12th House
+  - Twelfth House

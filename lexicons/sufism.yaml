@@ -1,0 +1,43 @@
+terms:
+- category: sufism_practice
+  canonical: Dhikr
+  variants:
+  - Zikr
+  - Zekr
+- category: sufism_practice
+  canonical: Sama
+  variants: []
+- category: sufism_concept
+  canonical: Fana
+  variants: []
+- category: sufism_concept
+  canonical: Baqa
+  variants: []
+- category: sufism_concept
+  canonical: Tawhid
+  variants:
+  - Tauhid
+- category: sufism_role
+  canonical: Murid
+  variants: []
+- category: sufism_role
+  canonical: Sheikh
+  variants:
+  - Shaykh
+- category: sufism_order
+  canonical: Mevlevi
+  variants:
+  - Mevleviye
+  - Mawlawiyya
+- category: sufism_order
+  canonical: Naqshbandi
+  variants:
+  - Naqshbandiya
+- category: sufism_order
+  canonical: Qadiri
+  variants:
+  - Qadiriyya
+- category: sufism_order
+  canonical: Chishti
+  variants:
+  - Chishtiyya

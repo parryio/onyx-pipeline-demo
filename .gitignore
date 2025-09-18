@@ -1,0 +1,110 @@
+# -----------------
+# Python
+# -----------------
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+.eggs/
+.venv/
+.env
+*.sqlite3
+
+# -----------------
+# Build / Packaging
+# -----------------
+dist/
+build/
+*.whl
+
+# -----------------
+# Project Artifacts (Onyx)
+# -----------------
+artifacts/
+quarantine/
+auxiliary/
+legacy/
+scratch/
+*.jsonl
+*.log
+*.tmp
+
+# -----------------
+# IDE / Editor
+# -----------------
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# -----------------
+# OS Noise
+# -----------------
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# -----------------
+# Library (corpus of PDFs, scans, etc.)
+# -----------------
+library/
+*.pdf
+*.djvu
+*.tif
+*.tiff
+*.png
+*.jpg
+*.jpeg
+*.zip
+*.rar
+*.7z
+
+# -----------------
+# Python Tooling / Caches / Test Artifacts
+# -----------------
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.pyre/
+.pytype/
+.hypothesis/
+.benchmarks/
+.tox/
+.nox/
+pip-wheel-metadata/
+__pypackages__/
+.python-version
+htmlcov/
+coverage/
+.coverage
+.coverage.*
+coverage.xml
+
+# -----------------
+# Node / Frontend (Vite, Svelte, Electron)
+# -----------------
+node_modules/
+node_modules/.vite/
+.eslintcache
+.pnpm-store/
+.yarn/cache/
+.yarn/unplugged/
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
+out/
+release/
+*.asar
+
+# -----------------
+# Temp & Patch Files
+# -----------------
+tmp/
+*.bak
+*.old
+*.orig
+*.rej
+*~
+~$*
+.cache/

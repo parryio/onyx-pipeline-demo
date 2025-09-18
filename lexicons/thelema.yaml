@@ -1,0 +1,30 @@
+terms:
+- category: thelema_concept
+  canonical: Thelema
+  variants: []
+- category: thelema_deity
+  canonical: Nuit
+  variants: []
+- category: thelema_deity
+  canonical: Hadit
+  variants: []
+- category: thelema_deity
+  canonical: Ra-Hoor-Khuit
+  variants:
+  - Ra Hoor Khuit
+  - Ra Hoor Khuit
+- category: thelema_text
+  canonical: Liber AL
+  variants:
+  - Liber AL vel Legis
+  - Book of the Law
+- category: thelema_org
+  canonical: A∴A∴
+  variants:
+  - A.'.A'.
+  - AA
+- category: thelema_org
+  canonical: O.T.O.
+  variants:
+  - OTO
+  - Ordo Templi Orientis

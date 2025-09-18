@@ -1,0 +1,39 @@
+# Deterministic Kit Manifest (Phase 4 Ground Truth)
+# Each kit enumerates source documents and assembly hints.
+# kit_id: stable lowercase slug (a-z0-9-)
+# source_doc_ids MUST correspond to doc_id values in artifacts/phase1/manifest.jsonl
+# keywords: optional deterministic hints (lowercase tokens)
+# description: optional, must be static (no timestamps, etc.)
+
+- kit_id: "gd-lbrp"
+  kit_name: "Golden Dawn - Lesser Banishing Ritual of the Pentagram"
+  source_doc_ids:
+    - "doc_bd8b40e5da70"  # golden dawn - lesser banishing ritual of the pentagram (LBRP).pdf
+  keywords: ["banishing", "pentagram", "qabalah", "qabalistic cross"]
+  description: "Canonical sequence of the LBRP as practiced in the Golden Dawn tradition."
+
+- kit_id: "chaos-cthonos-rite"
+  kit_name: "Chaos Magick - Cthonos Rite"
+  source_doc_ids:
+    - "doc_c51828873a89"  # 01-Beginning the Cthonos Rite.mp3
+    - "doc_6758eb4a37d5"  # 02-1st Chamber - Evocation.mp3
+    - "doc_0cd9f5102bec"  # 03-2nd Chamber - Divination.mp3
+    - "doc_1af851726e0f"  # 04-3rd Chamber - Enchantment.mp3
+    - "doc_f3ebd9031b6f"  # 05-4th Chamber - Invocation.mp3
+    - "doc_fe5d7ccfd2f9"  # 06-5th Chamber - The Pit.mp3
+    - "doc_6afc0979e057"  # 07-6th Chamber - Illumination.mp3
+    - "doc_5861637ee7ed"  # 08-Conclusion.mp3
+  keywords: ["cthonos", "evocation", "chaos", "carroll"]
+  description: "Multi-stage working attributed to Peter J. Carroll; assembled from sequential audio segments."
+
+- kit_id: "gd-middle-pillar"
+  kit_name: "Golden Dawn - Middle Pillar"
+  source_doc_ids:
+    - "doc_0f53aac4eea4"  # advmiddp.pdf
+    - "doc_18d7dac207c3"  # zam10.pdf
+    - "doc_477ab09e03d5"  # zam16.pdf
+    - "doc_5e1cfc396d57"  # zam22.pdf
+    - "doc_b027e3d21939"  # Venuszam16.pdf
+    - "doc_eead83466052"  # Israel Regardie, The Golden Dawn.pdf
+  keywords: ["middle pillar", "circulation of light", "qabalah"]
+  description: "Core Middle Pillar exercise baseline sequence extracted from canonical instructional text."

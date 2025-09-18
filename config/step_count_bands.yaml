@@ -1,0 +1,14 @@
+# Deterministic policy constraints for kit step counts.
+# Raw vs lean bounds (inclusive). Fail gate if violated.
+
+kits:
+  gd-lbrp:
+    raw_min: 8
+    raw_max: 40
+    lean_min: 5
+    lean_max: 20
+  gd-middle-pillar:
+    raw_min: 6
+    raw_max: 500
+    lean_min: 5
+    lean_max: 300

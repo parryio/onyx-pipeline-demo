@@ -1,0 +1,34 @@
+terms:
+- category: alchemy_stage
+  canonical: Nigredo
+  variants:
+  - Blackening
+- category: alchemy_stage
+  canonical: Albedo
+  variants:
+  - Whitening
+- category: alchemy_stage
+  canonical: Citrinitas
+  variants:
+  - Yellowing
+- category: alchemy_stage
+  canonical: Rubedo
+  variants:
+  - Reddening
+- category: alchemy_concept
+  canonical: Prima Materia
+  variants:
+  - Prime Matter
+- category: alchemy_concept
+  canonical: Philosopher's Stone
+  variants:
+  - Lapis Philosophorum
+- category: alchemy_vessel
+  canonical: Athanor
+  variants: []
+- category: alchemy_vessel
+  canonical: Alembic
+  variants: []
+- category: alchemy_agent
+  canonical: Azoth
+  variants: []

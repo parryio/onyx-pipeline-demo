@@ -1,0 +1,51 @@
+terms:
+- category: tarot_major
+  canonical: The Fool
+  variants:
+  - Fool
+- category: tarot_major
+  canonical: The Magician
+  variants:
+  - Magician
+- category: tarot_major
+  canonical: The High Priestess
+  variants:
+  - Priestess
+- category: tarot_major
+  canonical: The Tower
+  variants:
+  - Tower
+- category: tarot_major
+  canonical: The Sun
+  variants:
+  - Sun (Tarot)
+- category: tarot_suit
+  canonical: Wands
+  variants:
+  - Rod
+  - Staves
+- category: tarot_suit
+  canonical: Cups
+  variants: []
+- category: tarot_suit
+  canonical: Swords
+  variants: []
+- category: tarot_suit
+  canonical: Pentacles
+  variants:
+  - Coins
+  - Disks
+- category: tarot_court
+  canonical: Page
+  variants:
+  - Princess
+- category: tarot_court
+  canonical: Knight
+  variants:
+  - Prince
+- category: tarot_court
+  canonical: Queen
+  variants: []
+- category: tarot_court
+  canonical: King
+  variants: []

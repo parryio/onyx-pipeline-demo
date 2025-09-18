@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "onyx-scribe"
+version = "2.2.0"
+description = "Onyx Scribe is the set of command-line tools for the Onyx Hall pipeline."
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "Proprietary"}
+packages = ["onyx_scribe", "golden_pipeline", "ritual_player"]
+dependencies = ["jsonschema>=4.0"]
+
+[project.scripts]
+onyx = "onyx_scribe.cli:main"

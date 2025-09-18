@@ -1,0 +1,32 @@
+terms:
+- category: christian_concept
+  canonical: Theosis
+  variants: []
+- category: christian_concept
+  canonical: Kenosis
+  variants: []
+- category: christian_rite
+  canonical: Eucharist
+  variants:
+  - Holy Communion
+- category: christian_rite
+  canonical: Baptism
+  variants: []
+- category: christian_title
+  canonical: Theotokos
+  variants:
+  - Mother of God
+- category: christian_text
+  canonical: Apocryphon of John
+  variants:
+  - Secret Book of John
+- category: christian_text
+  canonical: Gospel of Thomas
+  variants: []
+- category: christian_text
+  canonical: Gospel of Mary
+  variants:
+  - Gospel of Mary Magdalene
+- category: christian_practice
+  canonical: Hesychasm
+  variants: []

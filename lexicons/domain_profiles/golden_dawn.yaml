@@ -1,0 +1,32 @@
+domain: "golden_dawn"
+# Canonical allowed ritual actions for Golden Dawn domain.
+# These should map 1:1 to labels in lexicons/ritual_actions.yaml (or a superset placeholder).
+allowed_actions:
+  - qabalistic_cross
+  - relax
+  - vibrate
+  - intone
+  - assume_godform
+  - banish
+  - formulate_pillar
+  - visualize
+  - circulate_light
+  - ground
+  - invoking_ritual
+  - trace_pentagram
+  - trace_hexagram
+  - analysis_of_keyword
+  - sign_of_enterer
+  - sign_of_silence
+
+# Prerequisites: kits whose steps must NOT be inlined when assembling other kits
+# in this domain. Instead they are linked ("link_only").
+prerequisites:
+  - kit_id: gd-lbrp
+    action: link_only
+    action_scope:
+      exclude_actions:
+        - banish
+        - vibrate
+        - qabalistic_cross
+        - intone
