@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Phase 1 Media Assets Schema",
+  "type": "object",
+  "properties": {
+    "asset_id": { "type": "string", "pattern": "^asset_[a-f0-9]{12}$" },
+    "doc_id": { "type": "string", "pattern": "^doc_[a-f0-9]{12}$" },
+    "path": { "type": "string" },
+    "page": { "type": "integer", "minimum": 0 },
+    "media_type": { "type": "string", "enum": ["pdf_image", "image", "audio"] },
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+  },
+  "required": ["asset_id", "doc_id", "path", "media_type", "sha256"]
+}

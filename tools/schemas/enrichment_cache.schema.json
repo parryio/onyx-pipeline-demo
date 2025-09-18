@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://onyxhall.com/schemas/enrichment_cache.schema.json",
+  "title": "Enrichment Cache",
+  "description": "A cache of AI parser requests and their structured JSON outputs.",
+  "type": "object",
+  "properties": {
+    "request_hash": {
+      "description": "SHA256 hash of the (chunk_hash + parser_type) to uniquely identify the request.",
+      "type": "string"
+    },
+    "parser_type": {
+      "description": "The type of parser used for the enrichment.",
+      "type": "string"
+    },
+    "chunk_hash": {
+      "description": "The hash of the content of the chunk that was parsed.",
+      "type": "string"
+    },
+    "result": {
+      "description": "The structured JSON output from the AI parser.",
+      "type": "object"
+    }
+  },
+  "required": ["request_hash", "parser_type", "chunk_hash", "result"]
+}

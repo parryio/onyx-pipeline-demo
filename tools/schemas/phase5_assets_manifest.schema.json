@@ -1,0 +1,33 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Phase 5 Assets Manifest Artifact",
+    "description": "Schema for the assets_manifest.jsonl, which lists all binary assets required by the UI.",
+    "type": "object",
+    "properties": {
+        "asset_type": {
+            "type": "string",
+            "enum": ["ui", "corpus"],
+            "description": "The type of asset: 'ui' for application chrome, 'corpus' for content-specific media."
+        },
+        "path": {
+            "type": "string",
+            "description": "Absolute filesystem path to the asset file (legacy manifests may contain a path relative to the Library root)."
+        },
+        "sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$",
+            "description": "The SHA256 content hash of the asset file."
+        },
+        "asset_id": {
+            "type": "string",
+            "description": "The unique identifier for the asset (only for 'corpus' type)."
+        }
+    },
+    "required": ["asset_type", "path", "sha256"],
+    "if": {
+        "properties": { "asset_type": { "const": "corpus" } }
+    },
+    "then": {
+        "required": ["asset_id"]
+    }
+}

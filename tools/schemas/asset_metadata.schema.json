@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://onyxhall.com/schemas/asset_metadata.schema.json",
+  "title": "Asset Metadata",
+  "description": "Structured metadata parsed from media assets.",
+  "type": "object",
+  "properties": {
+    "asset_id": {
+      "description": "The unique identifier for the asset.",
+      "type": "string"
+    },
+    "doc_id": {
+      "description": "The document this asset belongs to.",
+      "type": "string"
+    },
+    "asset_type": {
+      "description": "The type of the asset (e.g., image, audio).",
+      "type": "string"
+    },
+    "caption": {
+      "description": "A caption for the asset.",
+      "type": "string"
+    },
+    "page_number": {
+      "description": "The page number where the asset is located (for PDFs).",
+      "type": "integer"
+    }
+  },
+  "required": ["asset_id", "doc_id", "asset_type"]
+}

@@ -1,0 +1,12 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Phase 2 Entity Index Record",
+  "type": "object",
+  "required": ["entity_text", "source_chunk_id", "doc_id"],
+  "properties": {
+    "entity_text": {"type": "string", "minLength": 1, "maxLength": 256},
+    "source_chunk_id": {"type": ["string", "integer"]},
+    "doc_id": {"type": ["string", "integer"]}
+  },
+  "additionalProperties": true
+}

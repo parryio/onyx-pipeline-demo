@@ -1,0 +1,30 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Phase 3 Document Metadata",
+    "description": "Schema for the structured metadata extracted from document file paths.",
+    "type": "object",
+    "properties": {
+        "doc_id": {
+            "description": "The unique identifier for the document, linking back to the Phase 1 manifest.",
+            "type": "string",
+            "pattern": "^doc_[a-f0-9]{12}$"
+        },
+        "path": {
+            "description": "The original, relative path of the document from the library root.",
+            "type": "string"
+        },
+        "metadata": {
+            "description": "A dictionary of key-value pairs extracted from the file path.",
+            "type": "object",
+            "properties": {
+                "collection": { "type": "string" },
+                "tradition": { "type": "string" },
+                "author": { "type": "string" },
+                "title": { "type": "string" },
+                "topic": { "type": "string" }
+            },
+            "required": ["title", "collection"]
+        }
+    },
+    "required": ["doc_id", "path", "metadata"]
+}

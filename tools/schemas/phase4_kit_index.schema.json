@@ -1,0 +1,13 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Phase 4 Kit Index Record",
+  "type": "object",
+  "required": ["kit_id", "kit_name", "step_count"],
+  "properties": {
+    "kit_id": {"type": "string"},
+    "kit_name": {"type": "string"},
+    "description": {"type": "string"},
+    "step_count": {"type": "integer", "minimum": 0}
+  },
+  "additionalProperties": false
+}

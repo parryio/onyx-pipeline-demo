@@ -1,0 +1,11 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Phase 1 Quarantine Schema",
+  "type": "object",
+  "properties": {
+    "doc_id": { "type": "string", "pattern": "^doc_[a-f0-9]{12}$" },
+    "path": { "type": "string" },
+    "reason": { "type": "string" }
+  },
+  "required": ["doc_id", "path", "reason"]
+}

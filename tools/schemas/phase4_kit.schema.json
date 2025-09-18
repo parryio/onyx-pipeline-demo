@@ -1,0 +1,16 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Phase 4 Kit",
+  "type": "object",
+  "required": ["id", "name", "source_doc_ids", "step_ids"],
+  "additionalProperties": true,
+  "properties": {
+    "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]{2,64}$"},
+    "name": {"type": "string", "minLength": 3},
+    "description": {"type": "string"},
+    "keywords": {"type": "array", "items": {"type": "string"}},
+    "source_doc_ids": {"type": "array", "items": {"type": "string", "pattern": "^doc_[0-9a-f]{12}$"}},
+    "source_doc_titles": {"type": "array", "items": {"type": ["string", "null"]}},
+    "step_ids": {"type": "array", "items": {"type": "string"}}
+  }
+}

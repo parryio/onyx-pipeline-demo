@@ -1,0 +1,38 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "tools/schemas/ui_catalog.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "type", "title", "authors", "traditions", "media_ext"],
+  "properties": {
+    "id":           { "type": "string", "minLength": 3 },
+    "type":         { "type": "string", "enum": ["doc", "kit"] },
+    "title":        { "type": "string" },
+    "subtitle":     { "type": "string" },
+    "authors":      { "type": "array", "items": { "type": "string" } },
+    "traditions":   { "type": "array", "items": { "type": "string" } },
+    "media_ext":    { "type": "string" },
+    "summary":      { "type": "string" },
+    "tags":         { "type": "array", "items": { "type": "string" } },
+    "primary_asset_id": {
+      "type": ["string", "null"],
+      "pattern": "^asset_[a-f0-9]{12}$"
+    },
+    "asset_ids": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^asset_[a-f0-9]{12}$" }
+    },
+    "kit_ref": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "properties": {
+        "kit_id":    { "type": "string", "minLength": 3 },
+        "step_count":{ "type": "integer", "minimum": 0 }
+      }
+    },
+    "source_doc_id": {
+      "type": ["string", "null"],
+      "pattern": "^doc_[a-f0-9]{12}$"
+    }
+  }
+}

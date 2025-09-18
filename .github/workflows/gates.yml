@@ -1,0 +1,110 @@
+name: Gates
+on: [push, pull_request]
+
+jobs:
+  verify-determinism:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e .
+
+      - name: First pipeline run
+        env:
+          PYTHONHASHSEED: 0
+        run: |
+          onyx pipeline run
+          mkdir -p /tmp/run1
+          cp -r artifacts/* /tmp/run1/
+
+      - name: Clean artifacts
+        run: |
+          rm -rf artifacts/*
+
+      - name: Second pipeline run
+        env:
+          PYTHONHASHSEED: 0
+        run: |
+          onyx pipeline run
+          mkdir -p /tmp/run2
+          cp -r artifacts/* /tmp/run2/
+
+      - name: Compare artifacts
+        run: |
+          echo "Comparing artifact directories..."
+          diff -qr /tmp/run1 /tmp/run2
+          echo "Determinism check passed: Artifacts are byte-for-byte identical."
+
+  phase2-repro:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e .
+      - name: Phase1 baseline (single run)
+        env:
+          PYTHONHASHSEED: 0
+        run: |
+          onyx phase1
+      - name: Phase2 first run snapshot
+        env:
+          PYTHONHASHSEED: 0
+        run: |
+          onyx phase2
+          mkdir -p /tmp/p2run1
+          cp artifacts/phase2/embeddings.localhash-8d-v1.jsonl /tmp/p2run1/
+          cp artifacts/phase2/provenance.jsonl /tmp/p2run1/
+      - name: Clean phase2 artifacts only
+        run: |
+          rm -f artifacts/phase2/embeddings.localhash-8d-v1.jsonl artifacts/phase2/provenance.jsonl artifacts/phase2/entity_index.jsonl artifacts/phase2/search/bm25.index || true
+      - name: Phase2 second run snapshot
+        env:
+          PYTHONHASHSEED: 0
+        run: |
+          onyx phase2
+          mkdir -p /tmp/p2run2
+          cp artifacts/phase2/embeddings.localhash-8d-v1.jsonl /tmp/p2run2/
+          cp artifacts/phase2/provenance.jsonl /tmp/p2run2/
+      - name: Diff targeted phase2 artifacts
+        run: |
+          diff -q /tmp/p2run1/embeddings.localhash-8d-v1.jsonl /tmp/p2run2/embeddings.localhash-8d-v1.jsonl
+          diff -q /tmp/p2run1/provenance.jsonl /tmp/p2run2/provenance.jsonl
+          echo "Phase 2 targeted reproducibility check passed."
+
+  phase5-guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e . pytest
+      - name: Build prerequisites (Phase 1-4 best-effort)
+        env:
+          PYTHONHASHSEED: 0
+        run: |
+          onyx phase1
+          onyx phase2
+          onyx assemble_kits || true
+      - name: Run Phase-5 Guard Tests
+        env:
+          PYTHONHASHSEED: 0
+        run: |
+          pytest -q tests/test_phase5_gate.py

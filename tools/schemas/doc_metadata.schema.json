@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://onyxhall.com/schemas/doc_metadata.schema.json",
+  "title": "Document Metadata",
+  "description": "Structured metadata parsed from document paths and content.",
+  "type": "object",
+  "properties": {
+    "doc_id": {
+      "description": "The unique identifier for the document.",
+      "type": "string"
+    },
+    "title": {
+      "description": "The title of the document.",
+      "type": "string"
+    },
+    "author": {
+      "description": "The author of the document.",
+      "type": "string"
+    },
+    "publication_year": {
+      "description": "The year the document was published.",
+      "type": "integer"
+    },
+    "tags": {
+      "description": "Tags associated with the document.",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": ["doc_id"]
+}

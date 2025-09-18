@@ -1,0 +1,16 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Phase 3 Enrichment Cache Entry",
+  "type": "object",
+  "properties": {
+    "chunk_hash": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "prompt_hash": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "model": {"type": "string"},
+    "temperature": {"type": "number"},
+    "seed": {"type": "integer"},
+    "raw_response": {"type": "string"},
+    "system_fingerprint": {"type": "string"},
+    "created_at": {"type": "integer"}
+  },
+  "required": ["chunk_hash", "prompt_hash", "model", "temperature", "seed", "raw_response", "system_fingerprint", "created_at"]
+}

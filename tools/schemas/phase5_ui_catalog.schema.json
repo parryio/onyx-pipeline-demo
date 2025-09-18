@@ -1,0 +1,76 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Phase 5 UI Catalog Artifact",
+    "description": "Schema for the de-normalized ui_catalog.jsonl, which contains all data needed by the UI for a single kit.",
+    "type": "object",
+    "properties": {
+        "kit_id": {
+            "type": "string",
+            "description": "The unique identifier for the kit."
+        },
+        "kit_name": {
+            "type": "string",
+            "description": "The human-readable name of the kit."
+        },
+        "source_doc_id": {
+            "type": "string",
+            "description": "The document ID from which this kit was primarily sourced."
+        },
+        "author": {
+            "type": ["string", "null"],
+            "description": "The author of the source document."
+        },
+        "tradition": {
+            "type": ["string", "null"],
+            "description": "The esoteric tradition associated with the source document."
+        },
+        "steps": {
+            "type": "array",
+            "description": "A fully-hydrated list of the ritual steps in the kit.",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "step_id": {"type": "string"},
+                    "step_number": {"type": "integer"},
+                    "text": {"type": "string"},
+                    "provenance": {
+                        "type": "object",
+                        "properties": {
+                            "doc_id": {"type": "string"},
+                            "page_num": {"type": "integer"},
+                            "block_num": {"type": "integer"}
+                        },
+                        "required": ["doc_id", "page_num", "block_num"]
+                    },
+                    "media": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "asset_id": {"type": "string"},
+                                "caption": {"type": "string"}
+                            },
+                            "required": ["asset_id"]
+                        }
+                    }
+                },
+                "required": ["step_id", "step_number", "text", "provenance"]
+            }
+        },
+        "entities": {
+            "type": "array",
+            "description": "A fully-hydrated list of all entities cross-linked to this kit.",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "entity_id": {"type": "string"},
+                    "name": {"type": "string"},
+                    "type": {"type": "string"},
+                    "description": {"type": "string"}
+                },
+                "required": ["entity_id", "name", "type"]
+            }
+        }
+    },
+    "required": ["kit_id", "kit_name", "steps", "entities"]
+}

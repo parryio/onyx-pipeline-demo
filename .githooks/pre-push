@@ -1,0 +1,56 @@
+#!/usr/bin/env pwsh
+# Blocks pushes that include generated artifacts or JSONL files
+# Works on Windows with PowerShell Core or Windows PowerShell
+
+param(
+    [string]$RemoteName,
+    [string]$RemoteUrl
+)
+
+# Read refs to be pushed from stdin: <local_ref> <local_sha> <remote_ref> <remote_sha>
+$lines = @()
+while ($true) {
+    $line = [Console]::In.ReadLine()
+    if ($null -eq $line) { break }
+    if ($line.Trim().Length -gt 0) { $lines += $line }
+}
+
+$blocked = $false
+$reasons = @()
+
+foreach ($l in $lines) {
+    $parts = $l -split '\s+'
+    if ($parts.Length -lt 4) { continue }
+    $localSha  = $parts[1]
+    $remoteSha = $parts[3]
+
+    # Determine the range to scan
+    if ($remoteSha -eq '0' -or $remoteSha -eq '0000000000000000000000000000000000000000') {
+        $range = $localSha
+    } else {
+        $range = "$remoteSha..$localSha"
+    }
+
+    # List changed files in the push range
+    $files = git diff --name-only $range | Where-Object { $_ -ne $null -and $_.Trim().Length -gt 0 }
+
+    foreach ($f in $files) {
+        if ($f -match '^artifacts/' -or $f -match '^artifacts\\') {
+            $blocked = $true
+            $reasons += "Contains artifacts: $f"
+        }
+        elseif ($f -match '\\.jsonl$') {
+            $blocked = $true
+            $reasons += "Contains JSONL artifact: $f"
+        }
+    }
+}
+
+if ($blocked) {
+    Write-Host "\n[pre-push] Blocked: attempting to push generated artifacts:" -ForegroundColor Red
+    $reasons | Sort-Object -Unique | ForEach-Object { Write-Host " - $_" -ForegroundColor Yellow }
+    Write-Host "\nFix: remove from commit or add to .gitignore. If intentional, bypass with 'git push --no-verify'." -ForegroundColor Red
+    exit 1
+}
+
+exit 0
